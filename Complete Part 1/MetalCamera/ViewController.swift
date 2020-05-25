@@ -13,6 +13,11 @@ class ViewController: UIViewController {
     //MARK:- Vars
     var captureSession : AVCaptureSession!
     
+    var backCamera : AVCaptureDevice!
+    var frontCamera : AVCaptureDevice!
+    var backInput : AVCaptureInput!
+    var frontInput : AVCaptureInput!
+    
     //MARK:- View Components
     var switchCameraButton : UIButton = {
         let button = UIButton()
@@ -60,11 +65,51 @@ class ViewController: UIViewController {
             }
             self.captureSession.automaticallyConfiguresCaptureDeviceForWideColor = true
             
+            //setup inputs
+            self.setupInputs()
+            
             //commit configuration
             self.captureSession.commitConfiguration()
             //start running it
             self.captureSession.startRunning()
         }
+    }
+    
+    func setupInputs(){
+        //get back camera
+        if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
+            backCamera = device
+        } else {
+            //handle this appropriately for production purposes
+            fatalError("no back camera")
+        }
+        
+        //get front camera
+        if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
+            frontCamera = device
+        } else {
+            fatalError("no front camera")
+        }
+        
+        //now we need to create an input objects from our devices
+        guard let bInput = try? AVCaptureDeviceInput(device: backCamera) else {
+            fatalError("could not create input device from back camera")
+        }
+        backInput = bInput
+        if !captureSession.canAddInput(backInput) {
+            fatalError("could not add back camera input to capture session")
+        }
+        
+        guard let fInput = try? AVCaptureDeviceInput(device: backCamera) else {
+            fatalError("could not create input device from front camera")
+        }
+        frontInput = fInput
+        if !captureSession.canAddInput(frontInput) {
+            fatalError("could not add front camera input to capture session")
+        }
+        
+        //connect back camera input to session
+        captureSession.addInput(backInput)
     }
     
     //MARK:- Actions
