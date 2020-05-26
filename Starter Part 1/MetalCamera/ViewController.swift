@@ -11,7 +11,7 @@ import AVFoundation
 
 class ViewController: UIViewController {
     //MARK:- View Components
-    var switchCameraButton : UIButton = {
+    let switchCameraButton : UIButton = {
         let button = UIButton()
         let image = UIImage(named: "switchcamera")?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         return button
     }()
     
-    var captureImageButton : UIButton = {
+    let captureImageButton : UIButton = {
         let button = UIButton()
         button.backgroundColor = .white
         button.tintColor = .white
@@ -29,7 +29,7 @@ class ViewController: UIViewController {
         return button
     }()
     
-    var capturedImageView = CapturedImageView()
+    let capturedImageView = CapturedImageView()
     
     //MARK:- Life Cycle
     override func viewDidLoad() {

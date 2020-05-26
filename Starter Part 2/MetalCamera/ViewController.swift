@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import MetalKit
 
 class ViewController: UIViewController {
     //MARK:- Vars
@@ -17,8 +18,6 @@ class ViewController: UIViewController {
     var frontCamera : AVCaptureDevice!
     var backInput : AVCaptureInput!
     var frontInput : AVCaptureInput!
-    
-    var previewLayer : AVCaptureVideoPreviewLayer!
     
     var videoOutput : AVCaptureVideoDataOutput!
     
@@ -45,6 +44,8 @@ class ViewController: UIViewController {
     }()
     
     let capturedImageView = CapturedImageView()
+    
+    let mtkView = MTKView()
     
     //MARK:- Life Cycle
     override func viewDidLoad() {
@@ -74,11 +75,6 @@ class ViewController: UIViewController {
             
             //setup inputs
             self.setupInputs()
-            
-            DispatchQueue.main.async {
-                //setup preview layer
-                self.setupPreviewLayer()
-            }
             
             //setup output
             self.setupOutput()
@@ -139,12 +135,6 @@ class ViewController: UIViewController {
         }
         
         videoOutput.connections.first?.videoOrientation = .portrait
-    }
-    
-    func setupPreviewLayer(){
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        view.layer.insertSublayer(previewLayer, below: switchCameraButton.layer)
-        previewLayer.frame = self.view.layer.frame
     }
     
     func switchCameraInput(){
